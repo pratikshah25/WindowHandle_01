@@ -23,7 +23,7 @@ pipeline
 
         string(
             name : 'BRANCH_NAME',
-            defaultValue : 'master'
+            defaultValue : 'master',
             description : 'Enter Branch Name'
         )
 
