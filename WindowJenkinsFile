@@ -23,7 +23,7 @@ pipeline
 
         string(
             name : 'BRANCH_NAME',
-            defaultValue : 'master'
+            defaultValue : 'master',
             description : 'Enter Branch Name'
         )
 
@@ -67,11 +67,7 @@ pipeline
             {
                 script
                   {
-                      bat "mvn test ^ 
-                    -Denv=${params.ENVIRONMENT_NAME} ^ 
-                    -Dbrowser=${params.BROWSER_NAME} ^ 
-                    -Dsuite=${params.SUITE_NAME} ^ 
-                    -Dworkers=${params.WORKERS_NUMBER}"
+                      bat "mvn exec:java -Dexec.mainClass=Tutorial_03.WindowHandle_01"
                   }
             }
         }
