@@ -67,10 +67,10 @@ pipeline
             {
                 script
                   {
-                      bat "mvn test ^ 
-                    -Denv=${params.ENVIRONMENT_NAME} ^ 
-                    -Dbrowser=${params.BROWSER_NAME} ^ 
-                    -Dsuite=${params.SUITE_NAME} ^ 
+                      bat "mvn test
+                    -Denv=${params.ENVIRONMENT_NAME} 
+                    -Dbrowser=${params.BROWSER_NAME}
+                    -Dsuite=${params.SUITE_NAME}
                     -Dworkers=${params.WORKERS_NUMBER}"
                   }
             }
