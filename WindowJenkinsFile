@@ -1,0 +1,95 @@
+pipeline
+{
+    agent any
+    parameters
+    {
+        choice(
+            name : 'ENVIRONMENT_NAME',
+            choices : ['qa', 'uat', 'staging'],
+            description : 'Select Environment Name'
+        )
+
+        choice(
+            name : 'BROWSER_NAME',
+            choices : ['chrome', 'firefox', 'edge'],
+            description : 'Select Browser Name'
+        )
+
+         choice(
+            name : 'SUITE_NAME',
+            choices : ['Regression', 'Smoke', 'Sanity', 'E2E'],
+            description : 'Select Suite Type'
+        )
+
+        string(
+            name : 'BRANCH_NAME',
+            defaultValue : 'master'
+            description : 'Enter Branch Name'
+        )
+
+        choice(
+            name : 'WORKERS_NUMBER',
+            choices : ['1', '2', '3', '4', '5'],
+            description : 'Select Workers Number'
+        )
+    }
+
+    stages
+    {
+        stage("Clone GitHub Repository")
+        {
+            steps
+            {
+                git url : "https://github.com/pratikshah25/WindowHandle_01.git",
+                branch : "${params.BRANCH_NAME}"
+            }
+        }
+
+        stage("clean workspace")
+        {
+            steps
+            {
+                bat "mvn clean"
+            }
+        }
+
+        stage("Install Dependencies")
+        {
+            steps
+            {
+                bat "mvn install -DskipTests"
+            }
+        }
+
+        stage("Execute Selenium Test cases")
+        {
+            steps
+            {
+                script
+                  {
+                      bat "mvn test ^ 
+                    -Denv=${params.ENVIRONMENT_NAME} ^ 
+                    -Dbrowser=${params.BROWSER_NAME} ^ 
+                    -Dsuite=${params.SUITE_NAME} ^ 
+                    -Dworkers=${params.WORKERS_NUMBER}"
+                  }
+            }
+        }
+    }
+
+    post
+    {
+        always
+        {
+            script
+            {
+                allure([
+                      includeProperties : false,
+                      reportBuildPolicy : 'ALWAYS',
+                      results : [[path : 'allure-results']]
+                ])
+            }
+        }
+    }
+  
+}
